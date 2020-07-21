@@ -51,10 +51,42 @@ showed up, we can construct a sorted set of the input data from the
 buckets. 
 
 What is the time and space complexity of the counting sort algorithm?
+O(n)
 '''
 
 
 def counting_sort(arr, maximum=None):
     # Your code here
+    # check if input is empty
+    if not arr:
+        return arr
 
-    return arr
+    # find max val if not given
+    if not maximum:
+        maximum = max(arr) + 1
+
+    # initialize buckets
+    buckets = [0 for i in range(maximum+1)]
+
+    # add counts to buckets and ensure no negative vals
+    for i in arr:
+        if i >= 0:
+            buckets[i] += 1
+        else:
+            return "Error, negative numbers not allowed in Count Sort"
+
+    # count up buckets to find indexes
+    for i in range(1, len(buckets)):
+        buckets[i] = buckets[i-1] + buckets[i]
+
+    # create new array to put sorted vals in
+    sorted_arr = [-1 for i in range(maximum)]
+
+    # put vals in sorted array
+    for i in arr:
+        new_index = buckets[i]
+        buckets[i] -= i
+        sorted_arr[new_index-1] = i
+
+    # return sorted array without placeholder vals
+    return [i for i in sorted_arr if i >= 0]
